@@ -1,32 +1,17 @@
+import dotenv from "dotenv";
 import express from "express";
 import sequelize from "./db";
-import Client from "./models/client";
+import clientsRoutes from "./routes/clientsRoutes";
+import usersRoutes from "./routes/usersRoutes";
 
+dotenv.config();
 const app = express();
 const port = 3001;
 
 app.use(express.json());
 
-app.post("/api/clients", async (req, res) => {
-  try {
-    const { firstName, lastName, email } = req.body;
-    const client = await Client.create({ firstName, lastName, email });
-    res.status(201).json(client);
-  } catch (error) {
-    console.error(error);
-    // res.status(400).json({ error: error.message });
-  }
-});
-
-app.get("/api/clients", async (req, res) => {
-  try {
-    const clients = await Client.findAll();
-    res.json(clients);
-  } catch (error) {
-    console.error(error);
-    // res.status(400).json({ error: error.message });
-  }
-});
+app.use("/api/users", usersRoutes);
+app.use("/api/clients", clientsRoutes);
 
 const startServer = async () => {
   try {
@@ -44,5 +29,4 @@ const startServer = async () => {
   }
 };
 
-// Lance le serveur
 startServer();

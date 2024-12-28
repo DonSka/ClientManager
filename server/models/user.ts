@@ -1,7 +1,5 @@
-// server/models/client.ts
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../db";
-import Client from "./client";
 
 class User extends Model {
   public id!: number;
@@ -27,8 +25,8 @@ User.init(
   },
   {
     sequelize,
-    tableName: "clients",
+    tableName: "users",
   }
 );
 
-export default Client;
+export default User;

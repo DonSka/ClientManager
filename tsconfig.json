@@ -9,7 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "outDir": "./dist",
-    "rootDir": "./"
+    "rootDir": "./",
+    "types": ["node", "express"]
   },
   "include": ["server/**/*.ts", "src/**/*.ts"]
 }
