@@ -22,7 +22,6 @@ export const addClient = async (req: Request, res: Response) => {
       mail,
     });
 
-    // Retourner le client créé
     return res.status(201).json({
       message: "Client ajouté avec succès.",
       client: newClient,
@@ -30,5 +29,30 @@ export const addClient = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Erreur lors de l'ajout du client." });
+  }
+};
+
+export const getClients = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(400).json({ error: "Utilisateur non trouvé." });
+    }
+
+    const clients = await Client.findAll({
+      where: { userId },
+    });
+
+    if (clients.length === 0) {
+      return res.status(404).json({ message: "Aucun client trouvé." });
+    }
+
+    res.status(200).json(clients);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération des clients." });
   }
 };

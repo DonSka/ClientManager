@@ -12,5 +12,5 @@
     "rootDir": "./",
     "types": ["node", "express"]
   },
-  "include": ["server/**/*.ts", "src/**/*.ts"]
+  "include": ["server/**/*.ts", "src/**/*.ts", "src/routes.tsx"]
 }

@@ -1,3 +1,4 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import sequelize from "./db";
@@ -9,6 +10,13 @@ const app = express();
 const port = 3001;
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use("/api/users", usersRoutes);
 app.use("/api/clients", clientsRoutes);

@@ -8,7 +8,7 @@ if (!secretKey) {
   throw new Error("SECRET_KEY non définie dans l'environnement.");
 }
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<Response> => {
   const { email, password } = req.body;
 
   try {
@@ -30,9 +30,43 @@ export const login = async (req: Request, res: Response) => {
       expiresIn: "1h",
     });
 
-    res.status(200).json({ message: "Connexion réussie.", token });
+    return res.status(200).json({ message: "Connexion réussie.", token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Erreur lors de la connexion." });
+    return res.status(500).json({ error: "Erreur lors de la connexion." });
+  }
+};
+
+export const signup = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Nom, email, et mot de passe requis." });
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ error: "Un utilisateur avec cet email existe déjà." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      email,
+      password: hashedPassword,
+    });
+
+    res.status(201).json({
+      message: "Utilisateur créé avec succès.",
+      user: { id: newUser.id, email: newUser.email },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de l'inscription." });
   }
 };
