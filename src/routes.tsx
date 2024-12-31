@@ -10,7 +10,6 @@ const isAuthenticated = () => {
 
 export const getRoutes = () => {
   const isAuthenticatedState = isAuthenticated();
-  console.log(localStorage);
 
   return [
     {

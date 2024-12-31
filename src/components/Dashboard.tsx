@@ -1,15 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Client from "../Interfaces";
+import ClientForm from "./ClientForm";
+import Popup from "./Popup";
 
 const Dashboard = () => {
+  const [showPopup, setShowPopup] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [clients, setClients] = useState([
-    { id: 1, name: "John Doe", email: "john.doe@example.com" },
-    { id: 2, name: "Jane Smith", email: "jane.smith@example.com" },
-    { id: 3, name: "Alice Johnson", email: "alice.johnson@example.com" },
-  ]);
+  const [clients, setClients] = useState<Client[]>([]);
+
+  useEffect(() => {
+    setClients([
+      { firstName: "John", lastName: "Henri", email: "john.doe@example.com" },
+      {
+        firstName: "Jane",
+        lastName: "Johnson",
+        email: "jane.smith@example.com",
+      },
+      {
+        firstName: "Alice",
+        lastName: "Bricou",
+        email: "alice.johnson@example.com",
+      },
+    ]);
+  }, []);
 
   const handleAddClient = () => {
     console.log("Ajouter un client");
+    setShowPopup(true);
+  };
+
+  const addClient = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("hey");
   };
 
   return (
@@ -23,20 +45,21 @@ const Dashboard = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button onClick={handleAddClient}>Ajouter un client</button>
+        {showPopup && (
+          <Popup children={<ClientForm submitFunc={addClient} />} />
+        )}
       </div>
-      <ul>
-        {clients
-          .filter(
-            (client) =>
-              client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              client.email.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .map((client) => (
-            <li key={client.id}>
-              {client.name} - {client.email}
-            </li>
-          ))}
-      </ul>
+      {clients
+        .filter(
+          (client) =>
+            client.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            client.email.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .map((client, index) => (
+          <li key={index}>
+            {client.firstName} - {client.email}
+          </li>
+        ))}
     </div>
   );
 };
